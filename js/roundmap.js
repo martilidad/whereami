@@ -38,4 +38,21 @@ function rminitialize() {
 
   actualMarker.setMap(map);
   guessMarker.setMap(map);
+  renderOtherGuesses(map);
 };
+
+function renderOtherGuesses(map) {
+  //intermediate static object before I figure out how to get the data
+  var otherGuesses = {'A': {'LLArr': [31.710572,-81.731586]}, 'B': {'LLArr': [54.730097,-113.322859]}};
+  for (var name in otherGuesses){
+    var LLArr = otherGuesses[name]['LLArr'];
+    var ltLng = new google.maps.LatLng(LLArr[0], LLArr[1]);
+    var Marker = new google.maps.Marker({
+      position: ltLng,
+      title: name,
+      icon: 'img/other.png',
+      label: name
+    });
+    Marker.setMap(map);
+  }
+}
