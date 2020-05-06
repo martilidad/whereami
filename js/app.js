@@ -146,13 +146,13 @@ function get_challenge_callback(challenge) {
       method: "POST",
       headers: {"X-CSRFToken": Cookies.get('csrftoken')},
       contentType: 'application/json',
-      data: {
-        "Location_ID": location['Location_ID'],
+      data: JSON.stringify({
+        "Location_ID": window.loc['Location_ID'],
         "Lat": window.guessArray[0],
         "Long": window.guessArray[1],
         "Score": points,
         "Distance": distance
-      },
+      }),
       error: function (result) {
         console.log(result);
       }
