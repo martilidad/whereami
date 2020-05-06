@@ -1,4 +1,7 @@
-function get_challenge_callback(locations) {
+function get_challenge_callback(challenge) {
+
+  var maxTime = challenge['Time'];
+  var locations = challenge['Locations'];
 
   // Config
   var game = {
@@ -73,7 +76,7 @@ function get_challenge_callback(locations) {
   // Functions
   // Reset Timer
   function resetTimer() {
-    count = 15;
+    count = maxTime;
     counter = setInterval(timer, 1000);
   }
 
