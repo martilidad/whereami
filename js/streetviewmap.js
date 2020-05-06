@@ -2,19 +2,10 @@
 // Streetview Map
 //
 
-function svinitialize(location) {
+function svinitialize() {
 
   console.log('No peaking!');
-
-  //
-  // Get Coords
-  //
-  // Yeah this is a bit gross, right? Why not do it randomly? Because in geoguessr while it was great having random coords, some of the randomized points it picked sucked. I didn't
-  // want that at all, thus the manual lat/longs. It's fairly easy to build the random lat long coords based if the selected coords have a street view available
-  // however detection for that is a bit CPU intensive. In the mean time, just throw more coords into this array - it ain't that bad!
-  //
-
-  window.locLL = location['Lat'] + ',' + location['Long'];
+  var location = window.loc;
 
   // Do streetview
   var whoamiLocation = new google.maps.LatLng(location['Lat'], location['Long']);

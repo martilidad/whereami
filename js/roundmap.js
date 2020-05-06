@@ -2,17 +2,17 @@
 // End of round map
 //
 
-function rminitialize(location) {
+function rminitialize() {
+  var location = window.loc;
   console.log('End of round called');
 
   //
   // If locLatLongs or guessLatLongs are undefined, they didn't make a guess and there is no
   // round map for people who run out of time, so don't show it at all
   //
-  var currentLLArr = locLatLongs.replace(/[\])}[{(]/g, '').split(',');
-  var GuessLLArr = guessLatLongs.replace(/[\])}[{(]/g, '').replace(/\s/g, '').split(',');
-  var actualLtLng = new google.maps.LatLng(currentLLArr[0], currentLLArr[1]);
-  var guessLtLng = new google.maps.LatLng(GuessLLArr[0], GuessLLArr[1]);
+  var actualLtLng = new google.maps.LatLng(location['Lat'], location['Long']);
+  //use guess array because it might be timeout
+  var guessLtLng = new google.maps.LatLng(window.guessArray[0], window.guessArray[1]);
 
   var mapOptions = {
     zoom: 2,
@@ -23,6 +23,7 @@ function rminitialize(location) {
   }
 
   var map = new google.maps.Map($('#roundMap')[0], mapOptions);
+  window.map = map;
 
   var actualMarker = new google.maps.Marker({
     position: actualLtLng,
@@ -41,13 +42,14 @@ function rminitialize(location) {
   renderOtherGuesses(map, location);
 };
 
-function renderOtherGuesses(map, location) {
+function renderOtherGuesses() {
+  var map = window.map
   //intermediate static object before I figure out how to get the data
   $.ajax({
       url: "http://" + window.location.host + "/guess",
       method: "GET",
       data: {
-        "Location_ID": location['Location_ID'],
+        "Location_ID": window.loc['Location_ID'],
       },
       success: function (otherGuesses) {
         for (var name in otherGuesses) {
@@ -56,9 +58,9 @@ function renderOtherGuesses(map, location) {
             var ltLng = new google.maps.LatLng(guess['Lat'], guess['Long']);
             var Marker = new google.maps.Marker({
               position: ltLng,
-              title: name,
+              label: name,
               icon: 'img/other.png',
-              label: 'Distance: ' + guess['Distance'] + 'Score: ' + guess['Score']
+              title: 'Distance: ' + guess['Distance'] + ' Score: ' + guess['Score']
             });
             Marker.setMap(map);
           }
