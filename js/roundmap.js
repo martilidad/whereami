@@ -2,7 +2,7 @@
 // End of round map
 //
 
-function rminitialize() {
+function rminitialize(location) {
   console.log('End of round called');
 
   //
@@ -38,21 +38,34 @@ function rminitialize() {
 
   actualMarker.setMap(map);
   guessMarker.setMap(map);
-  renderOtherGuesses(map);
+  renderOtherGuesses(map, location);
 };
 
-function renderOtherGuesses(map) {
+function renderOtherGuesses(map, location) {
   //intermediate static object before I figure out how to get the data
-  var otherGuesses = {'A': {'LLArr': [31.710572,-81.731586]}, 'B': {'LLArr': [54.730097,-113.322859]}};
-  for (var name in otherGuesses){
-    var LLArr = otherGuesses[name]['LLArr'];
-    var ltLng = new google.maps.LatLng(LLArr[0], LLArr[1]);
-    var Marker = new google.maps.Marker({
-      position: ltLng,
-      title: name,
-      icon: 'img/other.png',
-      label: name
+  $.ajax({
+      url: "http://" + window.location.host + "/guess",
+      method: "GET",
+      data: {
+        "Location_ID": location['Location_ID'],
+      },
+      success: function (otherGuesses) {
+        for (var name in otherGuesses) {
+          if (otherGuesses.hasOwnProperty(name)) {
+            var guess = otherGuesses[name];
+            var ltLng = new google.maps.LatLng(guess['Lat'], guess['Long']);
+            var Marker = new google.maps.Marker({
+              position: ltLng,
+              title: name,
+              icon: 'img/other.png',
+              label: 'Distance: ' + guess['Distance'] + 'Score: ' + guess['Score']
+            });
+            Marker.setMap(map);
+          }
+        }
+      },
+      error: function (result) {
+        console.log(result);
+      }
     });
-    Marker.setMap(map);
-  }
 }
